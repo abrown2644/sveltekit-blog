@@ -26,7 +26,13 @@
 			holder: 'editorjs',
 
 			tools: {
-				header: Header,
+				header:{
+					class: Header,
+					config: {
+						placeholder: 'Enter a header'					
+					}
+				},
+				
 				image: {
 					class: ImageTool,
 					config: {
@@ -39,6 +45,23 @@
 			}
 		});
 	});
+
+	// do this on 'save' button click and also every few seconds?
+	// or after each keyup event wait a few seconds then fire save
+	const handleSave = () => {
+		editor.save().then((outputData) => {
+			console.log('Article data: ', outputData);
+
+		}).catch((error) => {
+			console.log('Saving failed: ', error)
+		});
+	}
+
+	let saveTimer;
+	const onKeyUp = (e) => {
+		clearTimeout(saveTimer);
+		saveTimer = setTimeout(console.log('saved!'), 1000);
+	}
 </script>
 
 <aside class="mt-4 flex flex-col text-center justify-center">
@@ -46,4 +69,7 @@
 	<small>to begin start typing!</small>
 </aside>
 
+<button on:click={handleSave}>Save</button>
 <section class="p-2 sm:py-2 px-6" id="editorjs" />
+
+<svelte:window on:keyup|preventDefault={onKeyUp} />
