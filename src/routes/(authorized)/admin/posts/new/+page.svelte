@@ -26,13 +26,13 @@
 			holder: 'editorjs',
 
 			tools: {
-				header:{
+				header: {
 					class: Header,
 					config: {
-						placeholder: 'Enter a header'					
+						placeholder: 'Enter a header'
 					}
 				},
-				
+
 				image: {
 					class: ImageTool,
 					config: {
@@ -49,19 +49,24 @@
 	// do this on 'save' button click and also every few seconds?
 	// or after each keyup event wait a few seconds then fire save
 	const handleSave = () => {
-		editor.save().then((outputData) => {
-			console.log('Article data: ', outputData);
+		editor
+			.save()
+			.then((outputData) => {
+				console.log('Article data: ', outputData);
+			})
+			.catch((error) => {
+				console.log('Saving failed: ', error);
+			});
+	};
 
-		}).catch((error) => {
-			console.log('Saving failed: ', error)
-		});
-	}
+	let timer;
 
-	let saveTimer;
-	const onKeyUp = (e) => {
-		clearTimeout(saveTimer);
-		saveTimer = setTimeout(console.log('saved!'), 1000);
-	}
+	const debounce = () => {
+		clearTimeout(timer);
+		timer = setTimeout(() => {
+			console.log('saved!');
+		}, 1000);
+	};
 </script>
 
 <aside class="mt-4 flex flex-col text-center justify-center">
@@ -70,6 +75,6 @@
 </aside>
 
 <button on:click={handleSave}>Save</button>
-<section class="p-2 sm:py-2 px-6" id="editorjs" />
+<section class="p-2 sm:py-2 px-6" id="editorjs" on:keyup={() => debounce()} />
 
-<svelte:window on:keyup|preventDefault={onKeyUp} />
+<!-- <svelte:window on:keyup|preventDefault={onKeyUp} /> -->
